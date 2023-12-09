@@ -30,6 +30,7 @@ TYPEINFO(/obj/item/clothing/head/butt)
 	var/sound/sound_fart = null // this is the life I live, making it so you can change the fart sound of your butt (that you can wear on your head) so that you can make artifact butts with weird farts
 	default_material = "butt"
 	mat_changename = "butt"
+	var/easy_surgery = FALSE //Can this be attached without surgery?  Not to be confused with the mob_parts var, "easy_attach"
 
 	disposing()
 		if (holder)
@@ -73,7 +74,7 @@ TYPEINFO(/obj/item/clothing/head/butt)
 		if (!(user.zone_sel.selecting == "chest"))
 			return 0
 
-		if (!surgeryCheck(M, user))
+		if (!src.easy_surgery && !surgeryCheck(M, user)) //Synthbutts (and maybe other butts in the future) can be attached easily
 			return 0
 
 		if (!can_act(user))
@@ -94,10 +95,12 @@ TYPEINFO(/obj/item/clothing/head/butt)
 		var/fluff = pick("shove", "place", "drop")
 		var/fluff2 = pick("hole", "gaping hole", "incision", "wound")
 
-		if (H.organHolder?.back_op_stage >= BACK_SURGERY_OPENED)
+		if (H.organHolder?.back_op_stage >= BACK_SURGERY_OPENED || src.easy_surgery)
 			user.tri_message(H, SPAN_ALERT("<b>[user]</b> [fluff]s [src] onto the [fluff2] where [H == user ? "[his_or_her(H)]" : "[H]'s"] butt used to be!"),\
 				SPAN_ALERT("You [fluff] [src] onto the [fluff2] where [H == user ? "your" : "[H]'s"] butt used to be!"),\
 				SPAN_ALERT("[H == user ? "You" : "<b>[user]</b>"] [fluff]s [src] onto the [fluff2] where your butt used to be!"))
+
+			playsound(H, 'sound/effects/attach.ogg', 50, TRUE)
 
 			if (user.find_in_hand(src))
 				user.u_equip(src)
@@ -202,3 +205,4 @@ TYPEINFO(/obj/item/clothing/head/butt/cyberbutt)
 	name = "synthetic butt"
 	desc = "Why would you even grow this. What the fuck is wrong with you?"
 	icon_state = "butt-plant"
+	easy_surgery = TRUE
