@@ -71,17 +71,17 @@ TYPEINFO(/obj/item/clothing/head/butt)
 
 	proc/can_attach_organ(var/mob/living/carbon/M as mob, var/mob/user as mob)
 		/* Impliments organ functions for butts. Checks if a butt can be attached to a target mob */
-		if (!(user.zone_sel.selecting == "chest"))
+		if (!(user.zone_sel.selecting == "chest")) //Are we targeting the right area?
 			return 0
 
-		if (!src.easy_surgery && !surgeryCheck(M, user)) //Synthbutts (and maybe other butts in the future) can be attached easily
+		if (!src.easy_surgery && !surgeryCheck(M, user)) //Synthbutts can be attached without surgery. Otherwise, check if we are doing surgery.
 			return 0
 
-		if (!can_act(user))
+		if (!can_act(user)) //No surgery while the surgeon is incapacitated
 			return 0
 
 		var/mob/living/carbon/human/H = M
-		if (!H.organHolder || !ishuman(H))
+		if (!H.organHolder || !ishuman(H)) //If you somehow have a butt not attached to a torso, or should not have a torso in general, then no dice.
 			return 0
 
 		return 1
@@ -100,11 +100,27 @@ TYPEINFO(/obj/item/clothing/head/butt)
 				SPAN_ALERT("You [fluff] [src] onto the [fluff2] where [H == user ? "your" : "[H]'s"] butt used to be!"),\
 				SPAN_ALERT("[H == user ? "You" : "<b>[user]</b>"] [fluff]s [src] onto the [fluff2] where your butt used to be!"))
 
-			playsound(H, 'sound/effects/attach.ogg', 50, TRUE)
-
 			if (user.find_in_hand(src))
 				user.u_equip(src)
 			H.organHolder.receive_organ(src, "butt", 3.0)
+
+			playsound(H, 'sound/effects/attach.ogg', 50, TRUE)
+			//For "easy_surgery," we want to reset surgical state to 0 or "Closed" after attaching, as a treat
+			//Also to bring parity between synthbutts/synthlimbs, as synthlimb attachments don't require you to use sutures
+			if (src.easy_surgery && !(H.organHolder?.back_op_stage == BACK_SURGERY_CLOSED))
+				H.organHolder?.back_op_stage = BACK_SURGERY_CLOSED
+				if(istype(src, /obj/item/clothing/head/butt/synth))
+					user.tri_message(H, SPAN_NOTICE("The surgical incisions on [H]'s back mend and close."),\
+						SPAN_NOTICE("Synthflesh from [H == user ? "your" : "[H]'s"] transplanted butt seeps into the \
+						surgical incisions on [H == user ? "your" : "[his_or_her(H)]"] back and closes them!"),\
+						SPAN_NOTICE("[H == user ? "Your" : "<b>[user]'s</b>"] transplant synthbutt seals up the \
+						deep cuts on [H == user ? "your" : "[his_or_her(H)]"] back!"))
+					if(H.bleeding)
+						repair_bleeding_damage(H, 80, 2) //I <3 synthflesh
+				else //In case anyone adds non-synthbutts with easy_surgery
+					user.tri_message(H, SPAN_NOTICE("The surgical incisions on [H]'s back heal, somehow."),\
+						SPAN_NOTICE("The surgical incisions on [H == user ? "your" : "[H]'s"] back close up miraculously! Weird."),\
+						SPAN_NOTICE("[H == user ? "Your" : "<b>[user]'s</b>"] keester-adjacent surgical incisions heal right up. Huh!"))
 			return 1
 		else
 			return 0
@@ -203,6 +219,6 @@ TYPEINFO(/obj/item/clothing/head/butt/cyberbutt)
 // moving this from plants_crop.dm because SERIOUSLY WHY -- cirr
 /obj/item/clothing/head/butt/synth
 	name = "synthetic butt"
-	desc = "Why would you even grow this. What the fuck is wrong with you?"
+	desc = "A plant-based butt alternative. You could use it to replace yours, if you're desperate."
 	icon_state = "butt-plant"
 	easy_surgery = TRUE
