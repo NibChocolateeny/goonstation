@@ -214,7 +214,7 @@ toxic - poisons
 	ricochets = TRUE
 
 /datum/projectile/bullet/akm/pod
-	damage = 4
+	damage = 7
 	shot_number = 1
 	dissipation_delay = 7
 

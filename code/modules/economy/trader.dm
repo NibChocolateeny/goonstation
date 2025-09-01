@@ -1115,6 +1115,7 @@ ABSTRACT_TYPE(/obj/npc/trader/robot/robuddy)
 		src.goods_buy += new /datum/commodity/drugs/buy/cannabis_mega(src)
 		src.goods_buy += new /datum/commodity/drugs/buy/cannabis_white(src)
 		src.goods_buy += new /datum/commodity/drugs/buy/cannabis_omega(src)
+		src.goods_buy += new /datum/commodity/contraband/drone_minigun(src)
 
 /obj/npc/trader/robot/robuddy/diner
 	name = "B.I.F.F."

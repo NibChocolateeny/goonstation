@@ -671,6 +671,12 @@ datum/commodity/drugs/sell/poppies
 	desc = "A standard-issue NT energy gun."
 	price = PAY_EMBEZZLED
 
+/datum/commodity/contraband/drone_minigun //Not for sale! Meant to be traded in for cash.
+	comname = "Salvaged Chain Gun System"
+	comtype = /obj/item/shipcomponent/mainweapon/minigun
+	desc = "A Syndicate ballistic weapon normally salvaged from dangerous, destroyed drones."
+	price = PAY_DONTBUYIT/2 //If you sell two of these you can afford a Scout Laser from Sketchy.
+
 //// purchase stuff
 
 /datum/commodity/contraband/command_suit

@@ -253,11 +253,11 @@
 	firerate = 20
 
 /obj/item/shipcomponent/mainweapon/minigun
-	name = "Minigun"
-	desc = "A low damage but high firerate anti-personnel minigun stuffed into a pod weapon."
+	name = "Chaingun" //Doesn't have a proper sprite as a multi-barreled gun, so we're calling it a chain gun.
+	desc = "A low damage but high firerate anti-personnel ballistic weapon, adapted for use by pods."
 	weapon_score = 1.25
 	firerate = 0.25 SECONDS
-	spread = 25
+	spread = 10
 	appearanceString = "pod_weapon_gun_off"
 	current_projectile = new/datum/projectile/bullet/akm/pod
 	icon_state = "minigun"
